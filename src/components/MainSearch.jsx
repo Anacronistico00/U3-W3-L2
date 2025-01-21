@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 import Job from './Job';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getJobsAction } from './redux/action';
 
 const MainSearch = () => {
   const [query, setQuery] = useState('');
-  const [jobs, setJobs] = useState([]);
-
-  const baseEndpoint =
-    'https://strive-benchmark.herokuapp.com/api/jobs?search=';
+  const dispatch = useDispatch();
+  const getJobs = useSelector((state) => state.jobs.list);
+  const getJobsError = useSelector((state) => state.jobs.error);
+  const getJobsLoading = useSelector((state) => state.jobs.loading);
+  const getFavourites = useSelector((state) => state.favourites.list);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -16,18 +20,8 @@ const MainSearch = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch(baseEndpoint + query + '&limit=20');
-      if (response.ok) {
-        const { data } = await response.json();
-        setJobs(data);
-      } else {
-        alert('Error fetching results');
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    setIsSearching(true);
+    dispatch(getJobsAction(query));
   };
 
   return (
@@ -37,7 +31,7 @@ const MainSearch = () => {
           <h1 className='display-1'>Remote Jobs Search</h1>
         </Col>
         <Col xs={2} className='mt-3'>
-          <Link to='/favourites'>Favourites</Link>
+          <Link to='/favourites'>Favourites {getFavourites.length}</Link>
         </Col>
         <Col xs={10} className='mx-auto'>
           <Form onSubmit={handleSubmit}>
@@ -50,9 +44,36 @@ const MainSearch = () => {
           </Form>
         </Col>
         <Col xs={10} className='mx-auto mb-5'>
-          {jobs.map((jobData) => (
-            <Job key={jobData._id} data={jobData} />
-          ))}
+          {isSearching && getJobsLoading ? (
+            <div className='text-center'>
+              <div>
+                <p>Caricamento in corso...</p>
+
+                <Spinner
+                  animation='grow'
+                  size='sm'
+                  variant='info'
+                  className='ms-2'
+                />
+                <Spinner
+                  animation='grow'
+                  size='sm'
+                  variant='info'
+                  className='ms-2'
+                />
+                <Spinner
+                  animation='grow'
+                  size='sm'
+                  variant='info'
+                  className='ms-2'
+                />
+              </div>
+            </div>
+          ) : !getJobsError ? (
+            getJobs.map((jobData) => <Job key={jobData._id} data={jobData} />)
+          ) : (
+            <Alert variant='danger'>ERRORE</Alert>
+          )}
         </Col>
       </Row>
     </Container>

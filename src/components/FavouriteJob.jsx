@@ -1,6 +1,7 @@
 import { Row, Col, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { removeFromFavouritesAction } from './redux/action';
 
 const FavouriteJob = ({ job, index }) => {
   const dispatch = useDispatch();
@@ -23,10 +24,7 @@ const FavouriteJob = ({ job, index }) => {
           className='m-2'
           variant='danger'
           onClick={() => {
-            dispatch({
-              type: 'REMOVE_FROM_FAVOURITES',
-              payload: index,
-            });
+            dispatch(removeFromFavouritesAction(index));
           }}
         >
           Remove from favorites
