@@ -3,7 +3,7 @@ import { GET_JOBS_SUCCESS, GET_JOBS_ERROR, GET_JOBS_LOADING } from '../action';
 const initialState = {
   list: [],
   error: '',
-  loading: true,
+  loading: false,
 };
 
 const jobReducer = (state = initialState, action) => {

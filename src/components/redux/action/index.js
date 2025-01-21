@@ -22,6 +22,10 @@ export const getJobsAction = (query) => {
   const baseEndpoint =
     'https://strive-benchmark.herokuapp.com/api/jobs?search=';
   return async (dispatch) => {
+    dispatch({
+      type: GET_JOBS_LOADING,
+      payload: true,
+    });
     try {
       const response = await fetch(baseEndpoint + query + '&limit=20');
       if (response.ok) {
