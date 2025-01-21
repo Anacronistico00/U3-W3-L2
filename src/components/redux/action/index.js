@@ -26,31 +26,27 @@ export const getJobsAction = (query) => {
       const response = await fetch(baseEndpoint + query + '&limit=20');
       if (response.ok) {
         const { data } = await response.json();
-        setTimeout(() => {
-          dispatch({
-            type: GET_JOBS_LOADING,
-            payload: false,
-          });
-          dispatch({
-            type: GET_JOBS_SUCCESS,
-            payload: data,
-          });
-        }, 1000);
-      } else {
-        throw new Error('Errore nel recupero dei dati API');
-      }
-    } catch (error) {
-      console.log(error);
-      setTimeout(() => {
         dispatch({
           type: GET_JOBS_LOADING,
           payload: false,
         });
         dispatch({
-          type: GET_JOBS_ERROR,
-          payload: error,
+          type: GET_JOBS_SUCCESS,
+          payload: data,
         });
-      }, 1000);
+      } else {
+        throw new Error('Errore nel recupero dei dati API');
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: GET_JOBS_LOADING,
+        payload: false,
+      });
+      dispatch({
+        type: GET_JOBS_ERROR,
+        payload: error,
+      });
     }
   };
 };
