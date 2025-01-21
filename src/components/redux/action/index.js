@@ -45,7 +45,7 @@ export const getJobsAction = (query) => {
       });
       dispatch({
         type: GET_JOBS_ERROR,
-        payload: error,
+        payload: 'Errore nella richiesta dati API',
       });
     }
   };

@@ -70,9 +70,15 @@ const MainSearch = () => {
               </div>
             </div>
           ) : !getJobsError ? (
-            getJobs.map((jobData) => <Job key={jobData._id} data={jobData} />)
+            getJobs.length === 0 && isSearching ? (
+              <p className='text-center mt-5 fs-4 fw-bold'>
+                Nessun risultato trovato
+              </p>
+            ) : (
+              getJobs.map((jobData) => <Job key={jobData._id} data={jobData} />)
+            )
           ) : (
-            <Alert variant='danger'>ERRORE</Alert>
+            <Alert variant='danger'>{getJobsError}</Alert>
           )}
         </Col>
       </Row>
