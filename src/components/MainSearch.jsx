@@ -12,6 +12,7 @@ const MainSearch = () => {
   const getJobsError = useSelector((state) => state.jobs.error);
   const getJobsLoading = useSelector((state) => state.jobs.loading);
   const getFavourites = useSelector((state) => state.favourites.list);
+  const [searched, setSearched] = useState(false);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -19,6 +20,7 @@ const MainSearch = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSearched(true);
     dispatch(getJobsAction(query));
   };
 
@@ -68,7 +70,7 @@ const MainSearch = () => {
               </div>
             </div>
           ) : !getJobsError ? (
-            query.trim() !== '' && getJobs.length === 0 ? (
+            searched && getJobs.length === 0 ? (
               <p className='text-center mt-5 fs-4 fw-bold'>
                 Nessun risultato trovato
               </p>
